@@ -206,13 +206,12 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# Data (DO NOT COMMIT DATA)
-data/raw/
-data/staging/
-data/warehouse/
-*.csv
-*.parquet
-*.json
+# Dataset (Ignore all data content, keep folder structure)
+data/raw/*
 !data/raw/.gitkeep
+
+data/staging/*
 !data/staging/.gitkeep
+
+data/warehouse/*
 !data/warehouse/.gitkeep
