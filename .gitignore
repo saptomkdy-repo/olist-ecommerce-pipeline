@@ -213,3 +213,6 @@ data/warehouse/
 *.csv
 *.parquet
 *.json
+!data/raw/.gitkeep
+!data/staging/.gitkeep
+!data/warehouse/.gitkeep
