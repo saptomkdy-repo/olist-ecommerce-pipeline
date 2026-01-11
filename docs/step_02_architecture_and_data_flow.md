@@ -1,146 +1,150 @@
-# Step 02 - Architecture and Data Flow
+# 2. Step 02 - Architecture and Data Flow
 
 ## Objective
 **Purposes:** defines end-to-end data architecture and data flow
-for the Olist Brazilian E-Commerce data pipeline. The goal is to
-design a scalable, reliable, and industry-aligned architecture
-before implementing the pipeline.
+for the Olist Brazilian E-Commerce data pipeline, designs a scalable and reliable architecture
+before implementing the real pipeline.
 
-No transformation, cleaning, or other modifications is performed in this step.
+No transformation, cleaning, or other modifications are performed in this step.
 
 ---
 
 ## Pipeline
 
 We design a hybrid data pipeline. It means our pipeline will consist of:
-1. batch pipeline; and
-2. real-time streaming pipeline
+1. Batch pipeline.
+2. Real-time streaming pipeline.
 to reflect real-world e-commerce data workflows.
 
-We know that:
-- Batch pipeline is used for historical and scheduled data ingestion.
-- Real-time streaming pipeline is used to simulate real-time order and payment events.
+We will used:
+1. Batch pipeline for historical and scheduled data ingestion.
+2. Real-time streaming pipeline for simulating real-time order and payment events.
 
 ---
 
 ## Data Sources
 
-### Batch Data Sources
-- Olist CSV datasets (Orders, Order Items, Customers, Products, Sellers, Payments, Reviews, Geolocation)
-- Data is treated as historical and incremental batch data.
+### Batch Pipeline Data Sources
+1. Olist CSV datasets:
+   - Orders
+   - Order Items
+   - Customers
+   - Products
+   - Sellers
+   - Payments
+   - Reviews
+   - Geolocation
+   - Category Name
+2. Data will be treated as historical and incremental batch data.
 
-### Streaming Data Sources
-- Simulated order events
-- Simulated payment events
-- Events are published to Kafka topics.
+### Real-time Streaming Pipeline Data Sources
+1. Simulated real-time order events.
+2. Simulated real-time payment events.
+3. Events will be published to Kafka topics.
 
 ---
 
 ## Ingestion Layer
 
 ### Batch Ingestion
-Batch ingestion is handled using Python scripts orchestrated by Apache Airflow.
+Batch ingestion will be handled using Python scripts and orchestrated by Apache Airflow.
 
-Flow:
-- CSV files are extracted using Python
-- Data is loaded into raw tables in PostgreSQL
-- Airflow schedules and monitors batch ingestion jobs
+**Flow:**
+1. CSV files will be extracted using Python.
+2. Data will be loaded into raw tables in PostgreSQL Database.
+3. Airflow will schedule and monitor batch ingestion jobs.
 
 ### Streaming Ingestion
-Streaming ingestion is handled using Kafka producers and consumers.
+Streaming ingestion will be handled using Apache Kafka (producers and consumers).
 
-Flow:
-- Producers publish events to Kafka topics
-- Consumers read events and write them to staging tables
+**Flow:**
+1. Producers will publish events to Kafka topics.
+2. Consumers will read events and write them to staging tables.
 
 ---
 
 ## Storage Architecture
 
-The storage layer is divided into three logical schemas:
+The storage layer will be divided into three logical schemas:
 
 ### Raw Layer
-- Stores data in its original structure
-- No transformations are applied
-- Used for audit and reprocessing
+1. Stores data in its original structure.
+2. No transformations will be applied in this layer.
+3. Used for audit and reprocessing.
 
 ### Staging Layer
-- Stores cleaned and standardized data
-- Applies basic schema alignment and type casting
-- Acts as an intermediate transformation layer
+1. Stores cleaned and standardized data.
+2. Applies basic schema alignment and type casting.
+3. Acts as an intermediate transformation layer.
 
 ### Data Warehouse Layer
-- Stores analytical-ready data
-- Uses star schema design
-- Contains fact and dimension tables
+1. Stores analytical-ready data.
+2. Uses optimized star schema design (fact and dimension tables).
 
 ---
 
 ## Processing Layer
 
 ### Batch Processing
-Batch transformations are handled using PySpark.
+Batch transformations will be handled using PySpark.
 
-Responsibilities:
-- Join transactional data
-- Aggregate payments and reviews
-- Build fact and dimension tables
+**Tasks:**
+1. Join transactional data.
+2. Aggregate payments and reviews.
+3. Build fact and dimension tables.
 
 ### Streaming Processing
-Streaming data is processed using Kafka consumers and optionally Spark Structured Streaming.
+Streaming data will be handled using Kafka consumers and optionally Spark Structured Streaming.
 
-Responsibilities:
-- Consume real-time events
-- Append data to staging tables
+**Tasks:**
+1. Consume real-time events.
+2. Append data to staging tables.
 
 ---
 
 ## Orchestration
 
-Apache Airflow is used to orchestrate batch workflows.
+Apache Airflow will be used to orchestrate batch workflows.
 
-Responsibilities:
-- Schedule batch ingestion jobs
-- Define task dependencies
-- Handle retries and monitoring
+**Tasks:**
+1. Schedule batch ingestion jobs.
+2. Define task dependencies.
+3. Handle retries and monitoring.
 
 ---
 
 ## Analytics and Consumption Layer
 
-The data warehouse serves as the source for analytics and reporting.
+The data warehouse will be served as the source for analytics and reporting.
 
-Use cases include:
-- Sales performance dashboards
-- Customer segmentation (RFM analysis)
-- Seller performance analysis
-- Product recommendation inputs
+**Our use cases:**
+1. Sales dashboards.
+2. Customer segmentation (RFM analysis).
+3. Seller performance.
+4. Product recommendation.
 
 ---
 
 ## Error Handling and Data Quality (Design Consideration)
 
-The pipeline is designed with data quality and reliability in mind.
-
-Planned checks include:
-- Row count validation
-- Schema validation
-- Duplicate detection
-- Logging and alerting
+The pipeline will be designed with data quality and reliability in mind, include:
+1. Row count validation.
+2. Schema validation.
+3. Duplicate detection.
+4. Logging and alerting.
 
 ---
 
 ## Architecture Diagram
 
-A high-level architecture diagram illustrates the end-to-end data flow
-from data sources to analytics consumption.
+A high-level architecture diagram illustrates end-to-end data flow from data sources to analytics consumption.
 
-(The diagram is provided separately.)
+(Put Image)
 
 ---
 
 ## Key Takeaways
 
-- The architecture separates ingestion, processing, and storage concerns
-- Batch and streaming pipelines coexist in a hybrid design
-- The design supports scalability, maintainability, and future extension
+- The architecture will separate ingestion, processing, and storage.
+- Batch and streaming pipelines will run side by side in a hybrid design.
+- The design will support scalability, maintainability, and future extension.

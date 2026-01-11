@@ -5,9 +5,9 @@
 **Purposes:** understanding the structure, relationships, and data quality characteristics of the Olist Brazilian
 E-Commerce dataset before designing the data pipeline.
 
-No transformation, cleaning, or other modifications is performed in this step, we are simply exploring the dataset.
+No transformation, cleaning, or other modifications are performed in this step, we are simply exploring the dataset.
 
-## 2\. Dataset Overview
+## Dataset Overview
 
 * Dataset: Olist Brazilian E-Commerce
 * Source: [Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
