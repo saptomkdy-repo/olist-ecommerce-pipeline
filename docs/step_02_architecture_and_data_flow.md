@@ -114,7 +114,7 @@ Apache Airflow will be used to orchestrate batch workflows.
 
 ---
 
-## Analytics and Consumption Layer
+## Presentation Layer
 
 The data warehouse will be served as the source for analytics and reporting.
 
@@ -126,7 +126,7 @@ The data warehouse will be served as the source for analytics and reporting.
 
 ---
 
-## Error Handling and Data Quality (Design Consideration)
+## Error Handling and Data Quality
 
 The pipeline will be designed with data quality and reliability in mind, include:
 1. Row count validation.
@@ -146,6 +146,6 @@ A high-level architecture diagram illustrates end-to-end data flow from data sou
 
 ## Key Takeaways
 
-- The architecture will separate ingestion, processing, and storage.
-- Batch and streaming pipelines will run side by side in a hybrid design.
-- The design will support scalability, maintainability, and future extension.
+1. The architecture will separate ingestion, processing, and storage.
+2. Batch and streaming pipelines will run side by side in a hybrid design.
+3. The design will support scalability, maintainability, and future extension.
