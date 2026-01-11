@@ -108,6 +108,7 @@ Batch transformations will be handled using PySpark.
 3. Build fact and dimension tables.
 
 **Why?**
+
 Spark excels when:
 1. Joining multiple tables.
 2. Large aggregations.
@@ -133,6 +134,7 @@ Apache Airflow will be used to orchestrate batch workflows.
 3. Handle retries and monitoring.
 
 **Why?**
+
 Airflow is:
 1. Scheduler.
 2. Orchestrator.
