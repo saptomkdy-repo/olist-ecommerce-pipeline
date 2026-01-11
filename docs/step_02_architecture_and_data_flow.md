@@ -73,14 +73,27 @@ The storage layer will be divided into three logical schemas:
 2. No transformations will be applied in this layer.
 3. Used for audit and reprocessing.
 
+**Why?**
+1. If there's a bug downstream, it can be reprocessed.
+2. Separates data ingestion from business logic.
+
 ### Staging Layer
 1. Stores cleaned and standardized data.
 2. Applies basic schema alignment and type casting.
 3. Acts as an intermediate transformation layer.
 
+**Why?**
+1. To ensure a clean and stable warehouse.
+2. The warehouse will be free from technical logic.
+
 ### Data Warehouse Layer
 1. Stores analytical-ready data.
 2. Uses optimized star schema design (fact and dimension tables).
+
+**Why?**
+1. Business Intelligence (BI) requires a stable schema.
+2. Queries will be faster.
+3. Business logic will be consolidated.
 
 ---
 
@@ -93,6 +106,13 @@ Batch transformations will be handled using PySpark.
 1. Join transactional data.
 2. Aggregate payments and reviews.
 3. Build fact and dimension tables.
+
+**Why?**
+Spark excels when:
+1. Joining multiple tables.
+2. Large aggregations.
+3. Layered transformations.
+4. Scalability (if data grows).
 
 ### Streaming Processing
 Streaming data will be handled using Kafka consumers and optionally Spark Structured Streaming.
@@ -111,6 +131,16 @@ Apache Airflow will be used to orchestrate batch workflows.
 1. Schedule batch ingestion jobs.
 2. Define task dependencies.
 3. Handle retries and monitoring.
+
+**Why?**
+Airflow is:
+1. Scheduler.
+2. Orchestrator.
+3. Dependency manager
+
+Airflow is NOT:
+1. Real-time engine.
+2. Streaming processor.
 
 ---
 
@@ -140,7 +170,7 @@ The pipeline will be designed with data quality and reliability in mind, include
 
 A high-level architecture diagram illustrates end-to-end data flow from data sources to analytics consumption.
 
-(Put Image)
+(Image: Coming Soon!)
 
 ---
 
