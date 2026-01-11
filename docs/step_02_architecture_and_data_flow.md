@@ -14,6 +14,7 @@ No transformation, cleaning, or other modifications are performed in this step.
 We design a hybrid data pipeline. It means our pipeline will consist of:
 1. Batch pipeline.
 2. Real-time streaming pipeline.
+
 to reflect real-world e-commerce data workflows.
 
 We will used:
