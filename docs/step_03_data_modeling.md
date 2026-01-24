@@ -1,4 +1,4 @@
-<img width="1085" height="513" alt="image" src="https://github.com/user-attachments/assets/75c7cfa9-8f51-4993-b97e-130635b46296" /># 3. Step 03 - Step Data Modeling
+# 3. Step 03 - Step Data Modeling
 
 ## Data Warehouse Schema
 
