@@ -41,6 +41,6 @@ Some columns need to be removed because they are not used for business analysis 
 
 In our schema, `order_id` is selected as a degenerate dimension since it is a business-critical identifier used across multiple fact tables without requiring additional descriptive attributes.
 
-**Degenerate Dimension** is a key that is stored in the fact table, does not have its own dimension table, can be used for identification & join, and usually without descriptive attributes. So, it is a dimension conceptually (used for grouping or filtering), but it is "degenerate" because it has no description.
+**Degenerate dimension** is a dimension key that is stored in the fact table, does not have its own dimension table, can be used for identification & join, and usually without descriptive attributes. So, it is a dimension conceptually (used for grouping or filtering), but it is "degenerate" because it has no description.
 
 The `order_id` column is not made into a `dim_order` dimension since it does not have a stable attribute that needs to be "dimensioned".
