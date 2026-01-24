@@ -32,7 +32,7 @@ We don't carry the primary key from the data source as is. We have to redesign i
 In this case, natural and composite keys are too long and have the potential to make joins slow and unstable, so we will use the surrogate key as the primary key, while the natural and composite keys remain stored in the table for traceability and debugging.
 
 ### Data Warehouse Schema Diagram
-<img width="1212" height="530" alt="image" src="https://github.com/user-attachments/assets/f6a48417-68ff-43ae-9ec6-6a4e639d4a0f" />
+<img width="1212" height="530" alt="image" src="https://github.com/saptomkdy-repo/olist-ecommerce-pipeline/blob/main/docs/diagrams/Star%20Schema%20Olist%20Pipeline%20Data%20Warehouse.drawio.png?raw=true" />
 The diagram above is created using draw.io.
 
 Our data warehouse schema follows a star schema design with a lightly snowflaked in geolocation dimension to avoid duplication and maintain consistent location attributes across customers and sellers.
