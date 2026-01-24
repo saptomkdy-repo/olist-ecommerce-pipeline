@@ -1,4 +1,4 @@
-# 3. Step 03 - Step Data Modeling
+<img width="1085" height="513" alt="image" src="https://github.com/user-attachments/assets/75c7cfa9-8f51-4993-b97e-130635b46296" /># 3. Step 03 - Step Data Modeling
 
 ## Data Warehouse Schema
 
@@ -32,7 +32,7 @@ We don't carry the primary key from the data source as is. We have to redesign i
 In this case, natural and composite keys are too long and have the potential to make joins slow and unstable, so we will use the surrogate key as the primary key, while the natural and composite keys remain stored in the table for traceability and debugging.
 
 ### Data Warehouse Schema Diagram
-<img width="1212" height="530" alt="image" src="https://github.com/saptomkdy-repo/olist-ecommerce-pipeline/blob/main/docs/diagrams/Star%20Schema%20Olist%20Pipeline%20Data%20Warehouse.drawio.png?raw=true" />
+<img width="1085" height="513" alt="image" src="https://github.com/user-attachments/assets/19e32637-89e4-4f57-bcfa-7ec162728184" />
 The diagram above is created using draw.io.
 
 Our data warehouse schema follows a star schema design with a lightly snowflaked in geolocation dimension to avoid duplication and maintain consistent location attributes across customers and sellers.
