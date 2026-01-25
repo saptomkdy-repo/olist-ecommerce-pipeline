@@ -7,6 +7,8 @@ In our schema:
 - **Dimension** tables represent the **context** or **descriptive attributes** (what, who, where, and when).
 - Analytics (in data warehouse) requires OLAP (Online Analytical Processing) or denormalization schema and focuses on large-scale historical data analysis for decision making, using complex queries.
 
+---
+
 ### Fact & Dimension Tables
 a. Our **primary fact** is `olist_order_items_dataset` (`fact_order_items`) because:
 - It represents actual sales/orders event.
@@ -20,6 +22,8 @@ d. Date dimension (`dim_date`) need to be created to break down dates into attri
 
 e. `olist_orders_dataset` is not selected as a fact table because it does not contain transactions but rather order headers.
 
+---
+
 ### Notes for Primary Key & Foreign Key in Data Warehouse
 We don't carry the primary key from the data source as is. We have to redesign it to suit our analytics needs. The warehouse isn't a mirror of the source. In this case, we need to design surrogate keys.
 - Natural keys are unique, existing real-data attributes with business meaning.
@@ -30,6 +34,8 @@ We don't carry the primary key from the data source as is. We have to redesign i
 - Surrogate keys are ideal for primary keys to ensure high performance and stability.
 
 In this case, natural and composite keys are too long and have the potential to make joins slow and unstable, so we will use the surrogate key as the primary key, while the natural and composite keys remain stored in the table for traceability and debugging.
+
+---
 
 ### Data Warehouse Schema Diagram
 <img width="1085" height="513" alt="image" src="https://github.com/user-attachments/assets/19e32637-89e4-4f57-bcfa-7ec162728184" />
@@ -44,3 +50,5 @@ In our schema, `order_id` is selected as a degenerate dimension since it is a bu
 **Degenerate dimension** is a dimension key that is stored in the fact table, does not have its own dimension table, can be used for identification & join, and usually without descriptive attributes. So, it is a dimension conceptually (used for grouping or filtering), but it is "degenerate" because it has no description.
 
 The `order_id` column is not made into a `dim_order` dimension since it does not have a stable attribute that needs to be "dimensioned".
+
+---
