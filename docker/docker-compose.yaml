@@ -1,0 +1,66 @@
+# Docker Compose is used to run multiple containers simultaneously,
+# with a consistent and repeatable configuration.
+
+# Without docker-compose, we would have to:
+# "docker run ...""
+# "docker run ..."
+# "docker network ..."
+# "docker volume ..."
+# Tiring, prone to typos, and difficult to repeat.
+
+# With docker-compose, we simply run:
+# "docker-compose up -d"
+# and we immediately get:
+# PostgreSQL running, Spark running, Network automatically, Volume automatically
+
+# Docker-compose schema version.
+# 3.8 is stable & common version for modern Docker engine so that Docker knows what YAML rules to use.
+version: "3.8"
+
+# We define which containers to run.
+# One service = one container (conceptually).
+services:
+  # PostgreSQL service.
+  # The name of this service is arbitrary, but it usually reflects its role.
+  # It can later be called from other services using the hostname postgres.
+  postgres:
+    # Use the official PostgreSQL version 14 image from Docker Hub.
+    # If it's not locally available, Docker will automatically pull it.
+    image: postgres:14
+    # Explicit container name. Without this, Docker will assign a random name.
+    container_name: smh-postgres
+    # This is the configuration of the postgres image.
+    environment:
+      POSTGRES_USER: smh_user # DB Username.
+      POSTGRES_PASSWORD: smh_pass # DB Password.
+      POSTGRES_DB: smh_db # DB Name.
+    ports:
+    # Host port : Container port.
+      - "5432:5432" # Port 5432 on our PC is forwarded to 5432 on the postgres container.
+      # We can now connect to PostgreSQL from Python, DBeaver, etc. on localhost:5432.
+    volumes: # Persist DB data on host machine. Data is not lost even if the container is stopped / deleted.
+      - pg_data:/var/lib/postgresql/data # DB data location inside the container to named volume pg_data.
+
+  # Apache Spark service.
+  spark:
+    # Spark Image from Bitnami with Spark Version 3.5.
+    image: bitnami/spark:3.5
+    # Explicit container name.
+    container_name: smh-spark
+    environment:
+      - SPARK_MODE=master # This container is not a worker.
+    volumes:
+      # ../ is the folder on our laptop (parent directory) & /app is the folder inside the container.
+      # So, the Python / Spark script files on the laptop are directly visible in the container and there is no need to rebuild the image every time we edit the code.
+      - ../:/app
+    # When we run "docker exec -it smh-spark bash", the starting position is directly at working_dir /app.
+    working_dir: /app
+    # command tail -f /dev/null → container starts but is idle.
+    # Without this, the Spark container may exit immediately.
+    # With this, we can exec and run manually: spark-shell, spark-submit, pyspark, etc.
+    command: tail -f /dev/null
+
+# Defines a named volume named pg_data for use by the Postgres service.
+# DB data remains secure and can be reused even if the compose is deleted.
+volumes:
+  pg_data:
