@@ -171,8 +171,7 @@ The pipeline will be designed with data quality and reliability in mind, include
 ## Architecture Diagram
 
 A high-level architecture diagram illustrates end-to-end data flow from data sources to analytics consumption.
-
-(Image: Coming Soon!)
+<img width="1920" height="1080" alt="Step 2 - Architecture and Data Flow" src="https://github.com/user-attachments/assets/40f6407c-5e73-4932-b532-fcabefb6a327" />
 
 ---
 
