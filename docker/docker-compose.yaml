@@ -22,7 +22,7 @@ version: "3.8"
 services:
   # PostgreSQL service.
   # The name of this service is arbitrary, but it usually reflects its role.
-  # It can later be called from other services using the hostname postgres.
+  # It can later be called from other services using the HOST name postgres.
   postgres:
     # Use the official PostgreSQL version 14 image from Docker Hub.
     # If it's not locally available, Docker will automatically pull it.
@@ -50,7 +50,7 @@ services:
     environment:
       - SPARK_MODE=master # This container is not a worker.
     volumes:
-      # ../ is the folder on our laptop (parent directory) & /app is the folder inside the container.
+      # ../ is the folder on our PC (parent directory) & /app is the folder inside the container.
       # So, the Python / Spark script files on the laptop are directly visible in the container and there is no need to rebuild the image every time we edit the code.
       - ../:/app
     # When we run "docker exec -it smh-spark bash", the starting position is directly at working_dir /app.
