@@ -1,27 +1,20 @@
-# This code does not use hardcoded Spark & ​​Postgres
-# configuration, but is separated into the utils folder.
-from spark.utils.postgres import POSTGRES_PROPERTIES, POSTGRES_URL
+from pyspark.sql.functions import col
+from utils.spark_session import create_spark_session
+from utils.postgres import POSTGRES_URL, POSTGRES_PROPERTIES
+from utils.write_db import write_to_postgres
 
-# Spark reads raw orders data from PostgreSQL.
+spark = create_spark_session("staging")
+
 df_orders = spark.read.jdbc(
-    POSTGRES_URL, "raw_orders", properties=POSTGRES_PROPERTIES
+    POSTGRES_URL, "raw.orders", properties=POSTGRES_PROPERTIES
 )
 
-# Data cleaning and transformation
-# .filter out records with null order_id
-# .cast order_purchase_timestamp to timestamp type
-# .withColumn overrides the existing column if the column name already exists
-df_orders_clean = (
+df_stg_orders = (
     df_orders
     .filter("order_id IS NOT NULL")
-    .withColumn("order_purchase_timestamp",
-                df_orders.order_purchase_timestamp.cast("timestamp"))
+    .withColumn("order_purchase_timestamp", col("order_purchase_timestamp").cast("timestamp"))
+    .withColumn("order_approved_at", col("order_approved_at").cast("timestamp"))
+    .dropDuplicates(["order_id"])
 )
 
-df_orders_clean.write \
-    .mode("overwrite") \
-    .jdbc(
-        POSTGRES_URL,
-        "stg.orders",
-        properties=POSTGRES_PROPERTIES
-    )
+write_to_postgres(df_stg_orders, "stg.orders")

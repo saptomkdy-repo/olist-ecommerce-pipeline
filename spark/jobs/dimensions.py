@@ -1,10 +1,13 @@
+from utils.spark_session import create_spark_session
+from utils.postgres import POSTGRES_URL, POSTGRES_PROPERTIES
+from utils.write_db import write_to_postgres
+
+spark = create_spark_session("dimensions")
+
 df_customers = spark.read.jdbc(
-    POSTGRES_URL, "stg.customers", properties=POSTGRES_PROPERTIES
+    POSTGRES_URL, "raw.customers", properties=POSTGRES_PROPERTIES
 )
 
-# Create dimension table for customers.
-# Choose relevant columns and remove duplicates.
-# Dimension = attribute data about entities (customers in this case).
 df_dim_customers = (
     df_customers
     .select(
@@ -16,9 +19,4 @@ df_dim_customers = (
     .dropDuplicates(["customer_id"])
 )
 
-df_dim_customers.write.jdbc(
-    POSTGRES_URL,
-    "dim.customers",
-    mode="overwrite",
-    properties=POSTGRES_PROPERTIES
-)
+write_to_postgres(df_dim_customers, "dwh.dim_customers")
