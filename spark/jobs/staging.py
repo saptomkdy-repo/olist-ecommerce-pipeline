@@ -83,7 +83,7 @@ df_payments = spark.read.jdbc(
 
 df_stg_payments = (
     df_payments
-    .filter("order_id IS NOT NULL and payment_sequential IS NOT NULL")
+    .filter("order_id IS NOT NULL AND payment_sequential IS NOT NULL")
     .dropDuplicates(["order_id","payment_sequential"])
 )
 

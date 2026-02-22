@@ -1,6 +1,5 @@
 from pyspark.sql.functions import *
 from pyspark.sql.window import Window
-
 from utils.spark_session import create_spark_session
 from utils.postgres import POSTGRES_URL, POSTGRES_PROPERTIES
 from utils.write_db import to_postgres

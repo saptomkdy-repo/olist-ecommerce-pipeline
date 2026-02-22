@@ -27,8 +27,8 @@ df_products = spark.read.schema(products_schema).option("header", True)\
 df_sellers = spark.read.schema(sellers_schema).option("header", True)\
     .csv(f"{base_path}/olist_sellers_dataset.csv")
 
-df_geolocation = spark.read.schema(geolocation_schema).option("header", True)\
-    .csv(f"{base_path}/olist_geolocation_dataset.csv")
+# df_geolocation = spark.read.schema(geolocation_schema).option("header", True)\
+#     .csv(f"{base_path}/olist_geolocation_dataset.csv")
 
 to_postgres(df_orders, "raw.orders")
 to_postgres(df_order_items, "raw.order_items")
@@ -37,4 +37,4 @@ to_postgres(df_order_payments, "raw.order_payments")
 to_postgres(df_order_reviews, "raw.order_reviews")
 to_postgres(df_products, "raw.products")
 to_postgres(df_sellers, "raw.sellers")
-to_postgres(df_geolocation, "raw.geolocation")
+# to_postgres(df_geolocation, "raw.geolocation")
