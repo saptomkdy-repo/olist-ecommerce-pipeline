@@ -1,7 +1,7 @@
 from pyspark.sql.functions import col
 from utils.spark_session import create_spark_session
 from utils.postgres import POSTGRES_URL, POSTGRES_PROPERTIES
-from utils.write_db import write_to_postgres
+from utils.write_db import to_postgres
 
 spark = create_spark_session("staging")
 
@@ -17,4 +17,4 @@ df_stg_orders = (
     .dropDuplicates(["order_id"])
 )
 
-write_to_postgres(df_stg_orders, "stg.orders")
+to_postgres(df_stg_orders, "stg.orders")

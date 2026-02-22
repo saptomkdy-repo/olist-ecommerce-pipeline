@@ -7,7 +7,7 @@ from pyspark.sql import SparkSession
 # This function creates (or gets) a SparkSession.
 # app_name: str → Spark application name (string).
 def create_spark_session(app_name: str):
-    return (
+    spark = (
         SparkSession.builder # builder is a factory object for setting Spark configuration before creating a session.
         .appName(app_name) # Spark app name to be shown in the Spark web UI.
         .config(
@@ -19,6 +19,8 @@ def create_spark_session(app_name: str):
         # If it doesn't exist, create a new one.
         # You don't create multiple SparkSessions in one JVM (Java Virtual Machine).
     )
+    spark.sparkContext.setLogLevel("WARN")
+    return spark
 
 # Explanation:
 

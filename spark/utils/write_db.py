@@ -1,4 +1,4 @@
-def write_to_postgres(df, table, mode="overwrite"):
+def to_postgres(df, table, mode="overwrite"):
     from utils.postgres import POSTGRES_URL, POSTGRES_PROPERTIES
     df.write.jdbc(
         url=POSTGRES_URL,
