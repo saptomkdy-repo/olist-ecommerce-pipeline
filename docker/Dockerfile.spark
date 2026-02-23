@@ -1,0 +1,22 @@
+FROM apache/spark:3.5.1
+
+USER root
+
+RUN pip install pandas psycopg2-binary sqlalchemy
+
+WORKDIR /app
+COPY . /app
+
+FROM apache/spark:3.5.1
+
+USER root
+
+COPY spark/requirements.txt /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
+
+FROM apache/spark:3.5.1
+
+USER root
+
+RUN mkdir -p /opt/spark/jars
+ADD https://jdbc.postgresql.org/download/postgresql-42.7.3.jar /opt/spark/jars/

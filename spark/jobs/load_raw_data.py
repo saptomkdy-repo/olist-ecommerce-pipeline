@@ -1,6 +1,10 @@
+import sys
+sys.path.append("/app/spark")
+
 from utils.spark_session import create_spark_session
-from utils.schemas import orders_schema, order_items_schema, customers_schema, order_payments_schema, order_reviews_schema, products_schema, sellers_schema, geolocation_schema
+from utils.schemas import orders_schema, order_items_schema, customers_schema, order_payments_schema, order_reviews_schema, products_schema, sellers_schema #, geolocation_schema
 from utils.write_db import to_postgres
+
 
 spark = create_spark_session("load_raw_data")
 

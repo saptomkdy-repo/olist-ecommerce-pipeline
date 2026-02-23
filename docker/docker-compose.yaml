@@ -15,7 +15,7 @@
 
 # Docker-compose schema version.
 # 3.8 is stable & common version for modern Docker engine so that Docker knows what YAML rules to use.
-version: "3.8"
+# version: "3.8"
 
 # We define which containers to run.
 # One service = one container (conceptually).
@@ -43,8 +43,9 @@ services:
 
   # Apache Spark service.
   spark:
-    # Spark Image from Bitnami with Spark Version 3.5.
-    image: bitnami/spark:3.5
+    build:
+      context: .
+      dockerfile: Dockerfile.spark
     # Explicit container name.
     container_name: smh-spark
     environment:
