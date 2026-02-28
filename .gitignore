@@ -217,3 +217,5 @@ data/warehouse/*
 !data/warehouse/.gitkeep
 
 logs/
+
+show_tree.py
