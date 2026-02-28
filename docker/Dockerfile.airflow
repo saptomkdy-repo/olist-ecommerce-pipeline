@@ -1,0 +1,18 @@
+FROM apache/airflow:2.8.0-python3.10
+
+USER root
+
+RUN apt-get update && \
+    apt-get install -y openjdk-17-jdk && \
+    apt-get clean
+
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+ADD https://jdbc.postgresql.org/download/postgresql-42.7.3.jar /opt/airflow/jars/postgresql-42.7.3.jar
+RUN chmod 644 /opt/airflow/jars/postgresql-42.7.3.jar
+
+USER airflow
+
+RUN pip install pyspark==3.5.0 \
+    psycopg2-binary==2.9.9 \
+    python-dotenv==1.0.1

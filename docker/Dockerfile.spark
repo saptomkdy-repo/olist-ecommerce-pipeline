@@ -2,7 +2,7 @@ FROM apache/spark:3.5.0
 
 USER root
 
-# Install pip (karena image spark default belum ada)
+# Install pip
 RUN apt-get update && \
     apt-get install -y python3-pip && \
     pip3 install --upgrade pip
@@ -11,16 +11,15 @@ RUN apt-get update && \
 COPY /spark/requirements.txt /tmp/requirements.txt
 RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
-# Tambahkan PostgreSQL JDBC driver
+# PostgreSQL JDBC driver
 ADD https://jdbc.postgresql.org/download/postgresql-42.7.3.jar /opt/spark/jars/
 
 # Working directory
 WORKDIR /app
 
-# Copy semua file ke dalam container
+# Copy all files to container
 COPY . .
 
-# Supaya import utils tidak error
 ENV PYTHONPATH=/app/spark
 
 USER 185

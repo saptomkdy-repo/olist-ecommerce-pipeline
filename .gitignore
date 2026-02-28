@@ -215,3 +215,5 @@ data/staging/*
 
 data/warehouse/*
 !data/warehouse/.gitkeep
+
+logs/

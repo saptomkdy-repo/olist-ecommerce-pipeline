@@ -2,15 +2,21 @@
 # Without SparkSession, we cannot create DataFrames, read/write data, or
 # perform Spark SQL queries.
 
+import os
 from pyspark.sql import SparkSession
 
 # This function creates (or gets) a SparkSession.
 # app_name: str → Spark application name (string).
 def create_spark_session(app_name: str):
+    jar_path = os.getenv(
+        "POSTGRES_JAR_PATH",
+        "/opt/spark/jars/postgresql-42.7.3.jar"
+    )
     spark = (
         SparkSession.builder # builder is a factory object for setting Spark configuration before creating a session.
         .appName(app_name) # Spark app name to be shown in the Spark web UI.
-        .config("spark.jars", "/opt/spark/jars/postgresql-42.7.3.jar") # Add the PostgreSQL JDBC driver JAR to the Spark classpath.
+        .config("spark.jars", jar_path)
+        .config("spark.sql.debug.maxToStringFields", "100")
         .getOrCreate()
         # If a SparkSession already exists, use that one.
         # If it doesn't exist, create a new one.

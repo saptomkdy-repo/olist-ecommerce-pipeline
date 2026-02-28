@@ -5,10 +5,10 @@ from utils.spark_session import create_spark_session
 from utils.schemas import orders_schema, order_items_schema, customers_schema, order_payments_schema, order_reviews_schema, products_schema, sellers_schema #, geolocation_schema
 from utils.write_db import to_postgres
 
+import os
+base_path = os.getenv("DATA_PATH", "/app/data/raw")
 
 spark = create_spark_session("load_raw_data")
-
-base_path = "/app/data/raw"
 
 df_orders = spark.read.schema(orders_schema).option("header", True)\
     .csv(f"{base_path}/olist_orders_dataset.csv")
