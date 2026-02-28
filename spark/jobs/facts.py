@@ -67,6 +67,7 @@ fact_items = (
     .withColumn("shipping_limit_date_sk",
             date_format("shipping_limit_date","yyyyMMdd").cast("int")
     )
+    .drop("order_purchase_timestamp", "shipping_limit_date")
 )
 
 to_postgres(fact_items, "dwh.fact_order_items")
@@ -112,13 +113,15 @@ fact_reviews = (
         "order_id",
         "review_score",
         "review_comment_title",
-        "review_comment_message"
+        "review_comment_message",
+        "review_creation_date"
     ).withColumn("review_sk",
             sha2(concat_ws("||", "order_id", "review_id"), 256)
     )
     .withColumn("review_creation_date_sk",
             date_format("review_creation_date","yyyyMMdd").cast("int")
     )
+    .drop("review_creation_date")
 )
 
 to_postgres(fact_reviews, "dwh.fact_reviews")

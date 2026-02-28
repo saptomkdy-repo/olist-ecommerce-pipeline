@@ -1,22 +1,26 @@
-FROM apache/spark:3.5.1
+FROM apache/spark:3.5.0
 
 USER root
 
-RUN pip install pandas psycopg2-binary sqlalchemy
+# Install pip (karena image spark default belum ada)
+RUN apt-get update && \
+    apt-get install -y python3-pip && \
+    pip3 install --upgrade pip
 
-WORKDIR /app
-COPY . /app
+# Copy requirements
+COPY /spark/requirements.txt /tmp/requirements.txt
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
-FROM apache/spark:3.5.1
-
-USER root
-
-COPY spark/requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
-
-FROM apache/spark:3.5.1
-
-USER root
-
-RUN mkdir -p /opt/spark/jars
+# Tambahkan PostgreSQL JDBC driver
 ADD https://jdbc.postgresql.org/download/postgresql-42.7.3.jar /opt/spark/jars/
+
+# Working directory
+WORKDIR /app
+
+# Copy semua file ke dalam container
+COPY . .
+
+# Supaya import utils tidak error
+ENV PYTHONPATH=/app/spark
+
+USER 185

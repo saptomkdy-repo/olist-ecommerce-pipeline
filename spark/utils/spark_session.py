@@ -10,10 +10,7 @@ def create_spark_session(app_name: str):
     spark = (
         SparkSession.builder # builder is a factory object for setting Spark configuration before creating a session.
         .appName(app_name) # Spark app name to be shown in the Spark web UI.
-        .config(
-            "spark.jars.packages", # spark.jars.packages = configuration for automatic Maven dependency download.
-            "org.postgresql:postgresql:42.6.0" # PostgreSQL JDBC driver version 42.6.0.
-            )
+        .config("spark.jars", "/opt/spark/jars/postgresql-42.7.3.jar") # Add the PostgreSQL JDBC driver JAR to the Spark classpath.
         .getOrCreate()
         # If a SparkSession already exists, use that one.
         # If it doesn't exist, create a new one.

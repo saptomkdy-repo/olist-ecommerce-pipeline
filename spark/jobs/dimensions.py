@@ -1,5 +1,5 @@
 from pyspark.sql.functions import *
-from pyspark.sql.window import Window
+# from pyspark.sql.window import Window
 from utils.spark_session import create_spark_session
 from utils.postgres import POSTGRES_URL, POSTGRES_PROPERTIES
 from utils.write_db import to_postgres
@@ -31,7 +31,7 @@ df_customers = spark.read.jdbc(
     POSTGRES_URL, "stg.customers", properties=POSTGRES_PROPERTIES
 )
 
-window = Window.orderBy("customer_id")
+# window = Window.orderBy("customer_id")
 
 dim_customers = (
     df_customers
@@ -50,8 +50,8 @@ dim_customers = (
             "customer_zip_code_prefix"
             # "geolocation_sk"
     )
-    .withColumn("customer_sk", row_number().over(window))
-    # .withColumn("customer_sk",sha2(col("customer_id"),256))
+    # .withColumn("customer_sk", row_number().over(window))
+    .withColumn("customer_sk",sha2(col("customer_id"),256))
 )
 
 to_postgres(dim_customers, "dwh.dim_customers")

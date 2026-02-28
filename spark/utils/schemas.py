@@ -30,8 +30,8 @@ order_payments_schema = StructType([
 ])
 
 order_reviews_schema = StructType([
-    StructField("order_id", StringType(), False),
     StructField("review_id", StringType(), False),
+    StructField("order_id", StringType(), False),
     StructField("review_score", IntegerType(), False),
     StructField("review_comment_title", StringType(), True),
     StructField("review_comment_message", StringType(), True),

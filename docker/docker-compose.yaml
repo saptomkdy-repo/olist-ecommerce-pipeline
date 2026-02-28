@@ -44,8 +44,8 @@ services:
   # Apache Spark service.
   spark:
     build:
-      context: .
-      dockerfile: Dockerfile.spark
+      context: ..
+      dockerfile: docker/Dockerfile.spark
     # Explicit container name.
     container_name: smh-spark
     environment:
