@@ -22,8 +22,18 @@ df_customers = spark.read.schema(customers_schema).option("header", True)\
 df_order_payments = spark.read.schema(order_payments_schema).option("header", True)\
     .csv(f"{base_path}/olist_order_payments_dataset.csv")
 
-df_order_reviews = spark.read.schema(order_reviews_schema).option("header", True)\
+# order_reviews has some multiline text fields, so we need to set multiLine and quote options
+df_order_reviews = (
+    spark.read
+    .option("header", True)
+    .option("multiLine", True)
+    .option("quote", '"')
+    .option("escape", '"')
+    .schema(order_reviews_schema)
     .csv(f"{base_path}/olist_order_reviews_dataset.csv")
+)
+# df_order_reviews = spark.read.schema(order_reviews_schema).option("header", True)\
+#     .csv(f"{base_path}/olist_order_reviews_dataset.csv")
 
 df_products = spark.read.schema(products_schema).option("header", True)\
     .csv(f"{base_path}/olist_products_dataset.csv")

@@ -2,6 +2,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.hooks.postgres_hook import PostgresHook
+from utils.data_quality import run_data_quality
 from datetime import datetime
 import importlib.util
 import os
@@ -71,4 +72,10 @@ with DAG(
         python_callable=create_views,
     )
 
-    build_schemas >> load_raw >> staging >> dimensions >> facts >> analytics
+    dq_check = PythonOperator(
+        task_id="data_quality_check",
+        python_callable=run_data_quality,
+        provide_context=True,
+    )
+
+    build_schemas >> load_raw >> staging >> dimensions >> facts >> analytics >> dq_check
