@@ -67,15 +67,15 @@ with DAG(
         op_kwargs={"job_path": f"{JOBS_PATH}/facts.py"},
     )
 
-    analytics = PythonOperator(
-        task_id="analytics_views",
-        python_callable=create_views,
-    )
-
     dq_check = PythonOperator(
         task_id="data_quality_check",
         python_callable=run_data_quality,
         provide_context=True,
     )
 
-    build_schemas >> load_raw >> staging >> dimensions >> facts >> analytics >> dq_check
+    analytics = PythonOperator(
+        task_id="analytics_views",
+        python_callable=create_views,
+    )
+
+    build_schemas >> load_raw >> staging >> dimensions >> facts >> dq_check >> analytics
