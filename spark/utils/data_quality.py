@@ -52,7 +52,7 @@ def save_result(pgconn, lastrun_ts, table, type, column, status, msg):
 
 
 def run_data_quality(**context):
-    pgconn = PostgresHook(postgres_conn_id="smh_postgres")
+    pgconn = PostgresHook(postgres_conn_id="smh-postgres")
     create_table(pgconn)
 
     lastrun_ts = datetime.now(ZoneInfo("Asia/Jakarta")).strftime("%Y-%m-%d %H:%M:%S")

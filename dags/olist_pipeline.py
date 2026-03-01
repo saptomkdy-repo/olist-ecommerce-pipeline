@@ -13,7 +13,7 @@ def run_spark_job(job_path):
     spec.loader.exec_module(module)
 
 def create_schemas():
-    pgconn = PostgresHook(postgres_conn_id="smh_postgres")
+    pgconn = PostgresHook(postgres_conn_id="smh-postgres")
     pgconn.run("""
         CREATE SCHEMA IF NOT EXISTS raw;
         CREATE SCHEMA IF NOT EXISTS stg;
@@ -21,7 +21,7 @@ def create_schemas():
     """)
 
 def create_views():
-    pgconn = PostgresHook(postgres_conn_id="smh_postgres")
+    pgconn = PostgresHook(postgres_conn_id="smh-postgres")
     sql_path = "/opt/airflow/spark/utils/analytics_views.sql"
     with open(sql_path, "r") as f:
         sql = f.read()
