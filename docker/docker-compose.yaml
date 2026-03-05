@@ -1,3 +1,5 @@
+# x-airflow-common is a reusable configuration for Airflow services (init, scheduler, webserver)
+# not in services section because it's not a standalone service, but a template for other services
 x-airflow-common: &airflow-common
   build:
     context: ..
@@ -28,7 +30,7 @@ x-airflow-common: &airflow-common
 
 services:
 
-  # Pipeline Database
+  # Pipeline Database for storing processed data (separate from Airflow's metadata database)
   postgres:
     image: postgres:14
     container_name: smh-postgres
@@ -49,7 +51,7 @@ services:
       interval: 5s
       retries: 5
 
-  # Spark
+  # Spark for data processing
   spark:
     build:
       context: ..
@@ -66,7 +68,7 @@ services:
     networks:
       - smh-network
 
-  # Airflow Metadata Database
+  # Airflow Metadata Database for Airflow's internal use (separate from pipeline database)
   airflow-postgres:
     image: postgres:14
     container_name: airflow-postgres
@@ -87,7 +89,7 @@ services:
       interval: 5s
       retries: 5
 
-  # Airflow Init (One-time setup)
+  # Airflow Init (One-time setup) for initializing the database and creating admin user
   airflow-init:
     <<: *airflow-common
     container_name: airflow-init
@@ -112,14 +114,14 @@ services:
         --conn-password ${POSTGRES_PASSWORD}
     restart: on-failure
 
-  # Airflow Scheduler
+  # Airflow Scheduler for orchestrating tasks
   airflow-scheduler:
     <<: *airflow-common
     container_name: airflow-scheduler
     command: scheduler
     restart: always
 
-  # Airflow Webserver
+  # Airflow Webserver for UI access
   airflow-webserver:
     <<: *airflow-common
     container_name: airflow-webserver
@@ -131,6 +133,84 @@ services:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
       retries: 5
+  
+  # Producer (Python)
+  #   ↓ send JSON messages
+  # Kafka Broker (Docker)
+  #   ↓ 2 topics: olist.orders & olist.payments
+  # Spark Structured Streaming (Consumer)
+  #   ↓ read streaming data from Kafka topics, transform it, and write to PostgreSQL
+  # PostgreSQL streaming schema
+  #   → streaming.orders
+  #   → streaming.payments
+
+  # Zookeeper for Kafka coordination
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - smh-network
+
+  # Kafka Broker for messaging
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    networks:
+      - smh-network
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      retries: 5
+
+  # Kafka Producer
+  kafka-producer:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.producer
+    container_name: kafka-producer
+    depends_on:
+      kafka:
+        condition: service_healthy
+    env_file:
+      - ../.env
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      PRODUCER_INTERVAL_SECONDS: 2
+    networks:
+      - smh-network
+  
+  kafka-consumer:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.consumer
+    container_name: kafka-consumer
+    depends_on:
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    env_file:
+      - ../.env
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    networks:
+      - smh-network
+    restart: on-failure
 
 networks:
   smh-network:

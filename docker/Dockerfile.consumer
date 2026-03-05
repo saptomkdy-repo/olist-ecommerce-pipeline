@@ -1,0 +1,24 @@
+FROM apache/spark:3.5.0
+
+USER root
+
+RUN apt-get update && \
+    apt-get install -y python3-pip && \
+    pip3 install --upgrade pip && \
+    pip3 install psycopg2-binary==2.9.9 python-dotenv==1.0.1
+
+ADD https://jdbc.postgresql.org/download/postgresql-42.7.3.jar /opt/spark/jars/
+RUN chmod 644 /opt/spark/jars/postgresql-42.7.3.jar
+
+RUN mkdir -p /home/spark/.ivy2/cache && \
+    chmod -R 777 /home/spark/.ivy2
+
+COPY streaming/ /app/streaming/
+COPY .env* /app/
+
+WORKDIR /app
+
+CMD ["/opt/spark/bin/spark-submit", \
+     "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0", \
+     "--jars", "/opt/spark/jars/postgresql-42.7.3.jar", \
+     "/app/streaming/consumer.py"]

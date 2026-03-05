@@ -5,7 +5,8 @@ USER root
 # Install pip
 RUN apt-get update && \
     apt-get install -y python3-pip && \
-    pip3 install --upgrade pip
+    pip3 install --upgrade pip && \
+    pip3 install psycopg2-binary==2.9.9
 
 # Copy requirements
 COPY /spark/requirements.txt /tmp/requirements.txt
@@ -13,6 +14,11 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
 # PostgreSQL JDBC driver
 ADD https://jdbc.postgresql.org/download/postgresql-42.7.3.jar /opt/spark/jars/
+RUN chmod 644 /opt/spark/jars/postgresql-42.7.3.jar
+
+# Ivy cache directory for Spark packages (e.g., for Kafka integration)
+RUN mkdir -p /home/spark/.ivy2/cache && \
+    chmod -R 777 /home/spark/.ivy2
 
 # Working directory
 WORKDIR /app

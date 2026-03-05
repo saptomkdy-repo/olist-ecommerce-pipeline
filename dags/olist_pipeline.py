@@ -31,7 +31,7 @@ JOBS_PATH = "/opt/airflow/spark/jobs"
 
 with DAG(
     dag_id="olist_pipeline",
-    description="ETL Pipeline: build schema -> raw -> staging -> dimensions -> facts -> analytics",
+    description="ETL Pipeline: build schema -> raw -> staging -> dimensions -> facts -> data quality check -> analytics",
     schedule_interval=None,
     start_date=datetime(2024, 1, 1),
     catchup=False,

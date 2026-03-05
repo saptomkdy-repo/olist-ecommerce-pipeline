@@ -1,0 +1,9 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+RUN pip3 install kafka-python==2.0.2 faker==19.6.2
+
+COPY streaming/ /app/streaming/
+
+CMD ["python", "streaming/producer.py"]
