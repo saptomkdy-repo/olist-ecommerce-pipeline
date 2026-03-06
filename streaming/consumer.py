@@ -99,6 +99,9 @@ def setup_schemas():
             event_timestamp       TIMESTAMP,
             ingested_at           TIMESTAMP DEFAULT NOW()
         );
+        
+        CREATE INDEX IF NOT EXISTS idx_streaming_orders_order_id   ON streaming.orders (order_id);
+        CREATE INDEX IF NOT EXISTS idx_streaming_payments_order_id ON streaming.payments (order_id);
     """)
     conn.commit()
     cur.close()

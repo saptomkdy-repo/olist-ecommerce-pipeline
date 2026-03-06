@@ -27,11 +27,45 @@ def create_views():
         sql = f.read()
     pgconn.run(sql)
 
+def add_constraints(**context):
+    pgconn = PostgresHook(postgres_conn_id="smh-postgres")
+
+    # Primary Keys
+    pgconn.run("""
+        DO $$
+        BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'dim_customers_pkey') THEN
+                ALTER TABLE dwh.dim_customers    ADD PRIMARY KEY (customer_sk);    END IF;
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'dim_products_pkey') THEN
+                ALTER TABLE dwh.dim_products     ADD PRIMARY KEY (product_sk);     END IF;
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'dim_sellers_pkey') THEN
+                ALTER TABLE dwh.dim_sellers      ADD PRIMARY KEY (seller_sk);      END IF;
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'dim_date_pkey') THEN
+                ALTER TABLE dwh.dim_date         ADD PRIMARY KEY (date_sk);        END IF;
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fact_order_items_pkey') THEN
+                ALTER TABLE dwh.fact_order_items ADD PRIMARY KEY (order_item_sk);  END IF;
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fact_payments_pkey') THEN
+                ALTER TABLE dwh.fact_payments    ADD PRIMARY KEY (payment_sk);     END IF;
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fact_reviews_pkey') THEN
+                ALTER TABLE dwh.fact_reviews     ADD PRIMARY KEY (review_sk);      END IF;
+        END $$;
+    """)
+
+    # Indexes
+    pgconn.run("""
+        CREATE INDEX IF NOT EXISTS idx_fact_order_items_customer_sk ON dwh.fact_order_items (customer_sk);
+        CREATE INDEX IF NOT EXISTS idx_fact_order_items_product_sk  ON dwh.fact_order_items (product_sk);
+        CREATE INDEX IF NOT EXISTS idx_fact_order_items_seller_sk   ON dwh.fact_order_items (seller_sk);
+        CREATE INDEX IF NOT EXISTS idx_fact_order_items_date_sk     ON dwh.fact_order_items (order_date_sk);
+        CREATE INDEX IF NOT EXISTS idx_fact_payments_order_id       ON dwh.fact_payments (order_id);
+        CREATE INDEX IF NOT EXISTS idx_fact_reviews_order_id        ON dwh.fact_reviews (order_id);
+    """)
+
 JOBS_PATH = "/opt/airflow/spark/jobs"
 
 with DAG(
     dag_id="olist_pipeline",
-    description="ETL Pipeline: build schema -> raw -> staging -> dimensions -> facts -> data quality check -> analytics",
+    description="ETL Pipeline: build schema -> raw -> staging -> dimensions -> facts -> constraints -> data quality check -> analytics",
     schedule_interval=None,
     start_date=datetime(2024, 1, 1),
     catchup=False,
@@ -67,6 +101,11 @@ with DAG(
         op_kwargs={"job_path": f"{JOBS_PATH}/facts.py"},
     )
 
+    constraints = PythonOperator(
+    task_id='add_constraints',
+    python_callable=add_constraints,
+)
+
     dq_check = PythonOperator(
         task_id="data_quality_check",
         python_callable=run_data_quality,
@@ -78,4 +117,4 @@ with DAG(
         python_callable=create_views,
     )
 
-    build_schemas >> load_raw >> staging >> dimensions >> facts >> dq_check >> analytics
+    build_schemas >> load_raw >> staging >> dimensions >> facts >> constraints >> dq_check >> analytics
