@@ -94,14 +94,14 @@ An end-to-end data engineering project built on the [Brazilian E-Commerce Public
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/saptomkdy-repo/olist-ecommerce-pipeline.git
-cd olist-ecommerce-pipeline
+$ git clone https://github.com/saptomkdy-repo/olist-ecommerce-pipeline.git
+$ cd olist-ecommerce-pipeline
 ```
 
 ### 2. Set up environment variables
 
 ```bash
-cp .env.example .env
+$ cp .env.example .env
 ```
 
 Edit `.env` with your preferred credentials:
@@ -149,8 +149,8 @@ data/raw/
 ### 1. Start all services
 
 ```bash
-cd docker
-docker-compose up -d --build
+$ cd docker
+$ docker-compose up -d --build
 ```
 
 This will start:
@@ -166,7 +166,7 @@ This will start:
 Verify all containers are running:
 
 ```bash
-docker ps
+$ docker ps
 ```
 
 ### 2. Run the batch pipeline
@@ -181,27 +181,73 @@ The pipeline runs 8 tasks in sequence:
 build_schemas → load_raw → staging → dimensions → facts → dq_check → constraints → analytics
 ```
 
-### 3. Verify data
+**Expected Result:**
 
-**Batch pipeline:**
+<img width="1077" height="320" alt="image" src="https://github.com/user-attachments/assets/8b30651d-1913-4c40-a3d9-7e8eff112a3f" />
+
+### 3. Verify data (View)
+
+**Batch Pipeline:**
 ```bash
 # You can connect via DBeaver or psql:
 # Host: localhost | Port: 5434 | DB: smh_db | User: smh_user
 
 # via psql:
-docker exec smh-postgres psql -U smh_user -d smh_db -c "\dv dwh.*"
+$ docker exec smh-postgres psql -U smh_user -d smh_db -c "\dv dwh.*"
 ```
 
-**Streaming pipeline:**
+**Expected Result:**
+
+<img width="569" height="316" alt="image" src="https://github.com/user-attachments/assets/07a3fa8d-488b-46ea-8aa1-f401eb1c5468" />
+
+**Checking the Analytics Views Data from Batch Processing:**
+```bash
+# via DBeaver:
+SELECT * FROM dwh.view_clv LIMIT 10;
+SELECT * FROM dwh.view_kpi LIMIT 10;
+SELECT * FROM dwh.view_payment_analysis LIMIT 10;
+SELECT * FROM dwh.view_product_insights LIMIT 10;
+SELECT * FROM dwh.view_review_analysis LIMIT 10;
+SELECT * FROM dwh.view_rfm LIMIT 10;
+SELECT * FROM dwh.view_sales_by_region LIMIT 10;
+SELECT * FROM dwh.view_seller_performance LIMIT 10;
+
+# via psql:
+$ docker exec smh-postgres psql -U smh_user -d smh_db -c "SELECT * FROM dwh.view_clv LIMIT 10;"
+$ docker exec smh-postgres psql -U smh_user -d smh_db -c "SELECT * FROM dwh.view_kpi LIMIT 10;"
+$ docker exec smh-postgres psql -U smh_user -d smh_db -c "SELECT * FROM dwh.view_payment_analysis LIMIT 10;"
+$ docker exec smh-postgres psql -U smh_user -d smh_db -c "SELECT * FROM dwh.view_product_insights LIMIT 10;"
+$ docker exec smh-postgres psql -U smh_user -d smh_db -c "SELECT * FROM dwh.view_review_analysis LIMIT 10;"
+$ docker exec smh-postgres psql -U smh_user -d smh_db -c "SELECT * FROM dwh.view_rfm LIMIT 10;"
+$ docker exec smh-postgres psql -U smh_user -d smh_db -c "SELECT * FROM dwh.view_sales_by_region LIMIT 10;"
+$ docker exec smh-postgres psql -U smh_user -d smh_db -c "SELECT * FROM dwh.view_seller_performance LIMIT 10;"
+```
+
+**Expected Result:**
+```dwh.view_clv```
+
+<img width="1806" height="573" alt="image" src="https://github.com/user-attachments/assets/c2e4e5b2-78eb-4efc-b0cb-700b0f0014df" />
+
+```dwh.view_kpi```
+
+<img width="1677" height="579" alt="image" src="https://github.com/user-attachments/assets/530d1da3-379d-4e29-b78f-22c33089e699" />
+
+etc.
+
+**Streaming Pipeline:**
 ```bash
 # Check producer is sending messages:
 docker logs kafka-producer --tail 20
 
 # Check data in PostgreSQL via DBeaver or psql.
+# via DBeaver:
+SELECT COUNT(*) FROM streaming.orders;
+SELECT COUNT(*) FROM streaming.payments;
+
 # via psql:
-docker exec smh-postgres psql -U smh_user -d smh_db \
+$ docker exec smh-postgres psql -U smh_user -d smh_db \
   -c "SELECT COUNT(*) FROM streaming.orders;"
-docker exec smh-postgres psql -U smh_user -d smh_db \
+$ docker exec smh-postgres psql -U smh_user -d smh_db \
   -c "SELECT COUNT(*) FROM streaming.payments;"
 ```
 
