@@ -51,6 +51,7 @@ An end-to-end data engineering project built on the [Brazilian E-Commerce Public
     ┃   ┗━━ diagrams/
     ┃       ┣━━ Star_Schema_Olist_Pipeline_Data_Warehouse_dbdiagram.png
     ┃       ┗━━ Architecture_and_Data_Flow.png
+    ┃       ┗━━ full_db_diagram.dbml
     ┣━━ logs/
     ┣━━ notebooks/
     ┃   ┗━━ step_01_data_understanding.ipynb
@@ -210,6 +211,11 @@ docker exec smh-postgres psql -U smh_user -d smh_db \
 
 The data warehouse follows a **star schema** design:
 <img width="1093" height="1108" alt="image" src="https://github.com/user-attachments/assets/bf67b4da-1b6f-46cf-b466-b28a20e112c7" />
+
+## Full DB Diagram
+See `docs/full_db_diagram.dbml` for the full schema (tables & views), then paste it at [dbdiagram.io](https://dbdiagram.io) to visualize.
+
+## Schema Description
 
 | Layer | Schema | Description |
 |---|---|---|
