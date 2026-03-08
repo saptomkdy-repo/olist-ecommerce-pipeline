@@ -224,9 +224,11 @@ $ docker exec smh-postgres psql -U smh_user -d smh_db -c "SELECT * FROM dwh.view
 ```
 
 **Expected Result:**
+
 ```dwh.view_clv```
 
 <img width="1806" height="573" alt="image" src="https://github.com/user-attachments/assets/c2e4e5b2-78eb-4efc-b0cb-700b0f0014df" />
+
 
 ```dwh.view_kpi```
 
@@ -303,7 +305,7 @@ Or you can see `docs/full_db_diagram.dbml`, then paste it at [dbdiagram.io](http
 ## Stopping the Pipeline
 
 ```bash
-cd docker
-docker-compose down        # stop containers, keep volumes
-docker-compose down -v     # stop containers and delete all data if you want
+$ cd docker
+$ docker-compose down        # stop containers, keep volumes
+$ docker-compose down -v     # stop containers and delete all data if you want
 ```
