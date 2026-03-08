@@ -174,7 +174,7 @@ Open Airflow UI at [http://localhost:8080](http://localhost:8080) and log in wit
 
 Find the `olist_pipeline` DAG and click **Trigger DAG** (play button).
 
-The pipeline runs 7 tasks in sequence:
+The pipeline runs 8 tasks in sequence:
 
 ```
 build_schemas → load_raw → staging → dimensions → facts → dq_check → constraints → analytics
