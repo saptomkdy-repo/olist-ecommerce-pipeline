@@ -211,6 +211,30 @@ services:
     networks:
       - smh-network
     restart: on-failure
+  
+  # Grafana for dashboard visualization
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: smh-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: superadmin
+      GF_SECURITY_ADMIN_PASSWORD: admin123!
+      GF_INSTALL_PLUGINS: grafana-clock-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ../grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - smh-network
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/api/health"]
+      interval: 30s
+      retries: 5
 
 networks:
   smh-network:
@@ -219,3 +243,4 @@ networks:
 volumes:
   pg_data:
   airflow_pg_data:
+  grafana_data:
