@@ -214,7 +214,7 @@ The data warehouse follows a **star schema** design:
 
 ## Full DB Diagram
 
-<img width="3153" height="3152" alt="image" src="https://github.com/user-attachments/assets/adfddacc-28a9-43e3-8943-d13d384f242b" />
+<img width="3357" height="3152" alt="image" src="https://github.com/user-attachments/assets/6405a9a5-27b5-4d37-a718-aae7204dd5f4" />
 
 Or you can see `docs/full_db_diagram.dbml`, then paste it at [dbdiagram.io](https://dbdiagram.io) to visualize.
 
