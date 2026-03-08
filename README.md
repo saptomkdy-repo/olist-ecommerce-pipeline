@@ -241,7 +241,7 @@ The data warehouse follows a **star schema** design:
 | Pipeline DB | localhost | 5434 | smh_db | smh_user |
 | Airflow DB | localhost | 5433 | airflow | airflow |
 
-> **Note:** Port 5434 is used for the pipeline database to avoid conflicts with any locally installed PostgreSQL instance.
+> **Note:** Port 5434 is used for the pipeline database to avoid conflicts with any locally installed PostgreSQL instance (5432).
 
 ---
 
