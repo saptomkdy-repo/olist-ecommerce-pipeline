@@ -213,7 +213,10 @@ The data warehouse follows a **star schema** design:
 <img width="1093" height="1108" alt="image" src="https://github.com/user-attachments/assets/bf67b4da-1b6f-46cf-b466-b28a20e112c7" />
 
 ## Full DB Diagram
-See `docs/full_db_diagram.dbml` for the full schema (tables & views), then paste it at [dbdiagram.io](https://dbdiagram.io) to visualize.
+
+<img width="3153" height="3152" alt="image" src="https://github.com/user-attachments/assets/adfddacc-28a9-43e3-8943-d13d384f242b" />
+
+Or you can see `docs/full_db_diagram.dbml`, then paste it at [dbdiagram.io](https://dbdiagram.io) to visualize.
 
 ## Schema Description
 
