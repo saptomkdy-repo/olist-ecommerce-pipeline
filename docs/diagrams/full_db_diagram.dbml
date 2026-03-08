@@ -360,3 +360,40 @@ Ref: dwh.view_clv.customer_state   > dwh.dim_customers.customer_state
 Ref: dwh.view_rfm.customer_unique_id    > dwh.dim_customers.customer_unique_id
 Ref: dwh.view_seller_performance.seller_id  > dwh.dim_sellers.seller_id
 Ref: dwh.view_product_insights.product_id   > dwh.dim_products.product_id
+
+// ============================================================
+// STREAMING SCHEMA — STREAM TABLES
+// ============================================================
+
+Table "streaming"."orders" {
+  "order_id" text
+  "customer_id" text
+  "customer_unique_id" text
+  "customer_city" text
+  "customer_state" text
+  "order_status" text
+  "order_purchase_timestamp" timestamp
+  "order_approved_at" timestamp
+  "price" numeric(10,2)
+  "freight_value" numeric(10,2)
+  "event_timestamp" timestamp
+  "ingested_at" timestamp [default: `now()`]
+
+  Indexes {
+    order_id [type: btree, name: "idx_streaming_orders_order_id"]
+  }
+}
+
+Table "streaming"."payments" {
+  "order_id" text
+  "payment_sequential" int4
+  "payment_type" text
+  "payment_installments" int4
+  "payment_value" numeric(10,2)
+  "event_timestamp" timestamp
+  "ingested_at" timestamp [default: `now()`]
+
+  Indexes {
+    order_id [type: btree, name: "idx_streaming_payments_order_id"]
+  }
+}
