@@ -65,7 +65,7 @@ JOBS_PATH = "/opt/airflow/spark/jobs"
 
 with DAG(
     dag_id="olist_pipeline",
-    description="ETL Pipeline: build schema -> raw -> staging -> dimensions -> facts -> constraints -> data quality check -> analytics",
+    description="ETL Pipeline: build schema -> raw -> staging -> dimensions -> facts -> data quality check -> constraints -> analytics",
     schedule_interval=None,
     start_date=datetime(2024, 1, 1),
     catchup=False,
@@ -117,4 +117,4 @@ with DAG(
         python_callable=create_views,
     )
 
-    build_schemas >> load_raw >> staging >> dimensions >> facts >> constraints >> dq_check >> analytics
+    build_schemas >> load_raw >> staging >> dimensions >> facts >> dq_check >> constraints >> analytics

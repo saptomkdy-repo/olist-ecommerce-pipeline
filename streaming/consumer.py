@@ -150,7 +150,7 @@ def main():
         "event_timestamp", to_timestamp("event_timestamp")
     )
 
-    # Write orders stream to PostgreSQL using foreachBatch and error handling
+    # Write orders stream to PostgreSQL using foreachBatch
     orders_query = (
         orders_df.writeStream
         .foreachBatch(lambda df, epoch: write_to_postgres(df, epoch, "streaming.orders")) # Use foreachBatch to write each micro-batch to PostgreSQL with error handling
