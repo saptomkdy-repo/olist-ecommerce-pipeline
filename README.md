@@ -5,7 +5,7 @@ An end-to-end data engineering project built on the [Brazilian E-Commerce Public
 ---
 
 ## Architecture
-![Project Architecture and Data Flow](Architecture_and_Data_Flow.png)
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/0c63d652-06a6-4492-b4f0-47ee9e104739" />
 
 ---
 
@@ -209,7 +209,7 @@ docker exec smh-postgres psql -U smh_user -d smh_db \
 ## Database Schema
 
 The data warehouse follows a **star schema** design:
-![Star Schema with Degenerate Dimension order_id](Star_Schema_Olist_Pipeline_Data_Warehouse_dbdiagram.png.png)
+<img width="1093" height="1108" alt="image" src="https://github.com/user-attachments/assets/bf67b4da-1b6f-46cf-b466-b28a20e112c7" />
 
 | Layer | Schema | Description |
 |---|---|---|
