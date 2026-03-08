@@ -200,6 +200,7 @@ $ docker exec smh-postgres psql -U smh_user -d smh_db -c "\dv dwh.*"
 
 <img width="569" height="316" alt="image" src="https://github.com/user-attachments/assets/07a3fa8d-488b-46ea-8aa1-f401eb1c5468" />
 
+
 **Checking the Analytics Views Data from Batch Processing:**
 ```bash
 # via DBeaver:
