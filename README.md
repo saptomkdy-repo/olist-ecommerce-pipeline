@@ -1,6 +1,6 @@
 # Olist E-Commerce Data Engineering Pipeline
 
-A end-to-end data engineering project built on the [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce). The pipeline covers batch ingestion, transformation, data warehousing, analytics views, data quality checks, and real-time streaming. All containerized with Docker.
+An end-to-end data engineering project built on the [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce). The pipeline covers batch ingestion, transformation, data warehousing, analytics views, data quality checks, and real-time streaming. All containerized with Docker.
 
 ---
 
