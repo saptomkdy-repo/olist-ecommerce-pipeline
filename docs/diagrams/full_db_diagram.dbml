@@ -1,0 +1,362 @@
+// ============================================================
+// OLIST E-COMMERCE DATA WAREHOUSE
+// DB Diagram - dbdiagram.io
+// ============================================================
+
+// ============================================================
+// RAW SCHEMA
+// ============================================================
+
+Table raw.orders {
+  order_id                      text [pk]
+  customer_id                   text
+  order_status                  text
+  order_purchase_timestamp      timestamp
+  order_approved_at             timestamp
+  order_delivered_carrier_date  timestamp
+  order_delivered_customer_date timestamp
+  order_estimated_delivery_date timestamp
+}
+
+Table raw.customers {
+  customer_id               text [pk]
+  customer_unique_id        text
+  customer_zip_code_prefix  integer
+  customer_city             text
+  customer_state            text
+}
+
+Table raw.order_items {
+  order_id            text
+  order_item_id       integer
+  product_id          text
+  seller_id           text
+  shipping_limit_date timestamp
+  price               numeric
+  freight_value       numeric
+}
+
+Table raw.order_payments {
+  order_id              text
+  payment_sequential    integer
+  payment_type          text
+  payment_installments  integer
+  payment_value         numeric
+}
+
+Table raw.order_reviews {
+  review_id                text
+  order_id                 text
+  review_score             integer
+  review_comment_title     text
+  review_comment_message   text
+  review_creation_date     timestamp
+  review_answer_timestamp  timestamp
+}
+
+Table raw.products {
+  product_id                  text [pk]
+  product_category_name       text
+  product_name_lenght         numeric
+  product_description_lenght  numeric
+  product_photos_qty          numeric
+  product_weight_g            numeric
+  product_length_cm           numeric
+  product_height_cm           numeric
+  product_width_cm            numeric
+}
+
+Table raw.sellers {
+  seller_id               text [pk]
+  seller_zip_code_prefix  integer
+  seller_city             text
+  seller_state            text
+}
+
+// RAW Relationships
+Ref: raw.orders.customer_id       > raw.customers.customer_id
+Ref: raw.order_items.order_id     > raw.orders.order_id
+Ref: raw.order_items.product_id   > raw.products.product_id
+Ref: raw.order_items.seller_id    > raw.sellers.seller_id
+Ref: raw.order_payments.order_id  > raw.orders.order_id
+Ref: raw.order_reviews.order_id   > raw.orders.order_id
+
+
+// ============================================================
+// STAGING SCHEMA
+// ============================================================
+
+Table stg.orders {
+  order_id                      text [pk]
+  customer_id                   text
+  order_status                  text
+  order_purchase_timestamp      timestamp
+  order_approved_at             timestamp
+  order_delivered_carrier_date  timestamp
+  order_delivered_customer_date timestamp
+  order_estimated_delivery_date timestamp
+}
+
+Table stg.customers {
+  customer_id               text [pk]
+  customer_unique_id        text
+  customer_zip_code_prefix  integer
+  customer_city             text
+  customer_state            text
+}
+
+Table stg.order_items {
+  order_id            text
+  order_item_id       integer
+  product_id          text
+  seller_id           text
+  shipping_limit_date timestamp
+  price               numeric
+  freight_value       numeric
+}
+
+Table stg.order_payments {
+  order_id              text
+  payment_sequential    integer
+  payment_type          text
+  payment_installments  integer
+  payment_value         numeric
+}
+
+Table stg.order_reviews {
+  review_id                text
+  order_id                 text
+  review_score             integer
+  review_comment_title     text
+  review_comment_message   text
+  review_creation_date     timestamp
+  review_answer_timestamp  timestamp
+}
+
+Table stg.products {
+  product_id                  text [pk]
+  product_category_name       text
+  product_name_lenght         numeric
+  product_description_lenght  numeric
+  product_photos_qty          numeric
+  product_weight_g            numeric
+  product_length_cm           numeric
+  product_height_cm           numeric
+  product_width_cm            numeric
+}
+
+Table stg.sellers {
+  seller_id               text [pk]
+  seller_zip_code_prefix  integer
+  seller_city             text
+  seller_state            text
+}
+
+// STG Relationships
+Ref: stg.orders.customer_id       > stg.customers.customer_id
+Ref: stg.order_items.order_id     > stg.orders.order_id
+Ref: stg.order_items.product_id   > stg.products.product_id
+Ref: stg.order_items.seller_id    > stg.sellers.seller_id
+Ref: stg.order_payments.order_id  > stg.orders.order_id
+Ref: stg.order_reviews.order_id   > stg.orders.order_id
+
+
+// ============================================================
+// DWH SCHEMA — DIMENSIONS
+// ============================================================
+
+Table dwh.dim_customers {
+  customer_sk               text [pk]
+  customer_id               text
+  customer_unique_id        text
+  customer_city             text
+  customer_state            text
+  customer_zip_code_prefix  integer
+}
+
+Table dwh.dim_products {
+  product_sk                  text [pk]
+  product_id                  text
+  product_category_name       text
+  product_name_lenght         numeric
+  product_description_lenght  numeric
+  product_photos_qty          numeric
+  product_weight_g            numeric
+  product_length_cm           numeric
+  product_height_cm           numeric
+  product_width_cm            numeric
+}
+
+Table dwh.dim_sellers {
+  seller_sk               text [pk]
+  seller_id               text
+  seller_city             text
+  seller_state            text
+  seller_zip_code_prefix  integer
+}
+
+Table dwh.dim_date {
+  date_sk  integer [pk]
+  date     date
+  day      integer
+  month    integer
+  year     integer
+  weekday  text
+  weekend  integer
+}
+
+
+// ============================================================
+// DWH SCHEMA — FACTS
+// ============================================================
+
+Table dwh.fact_order_items {
+  order_item_sk           text [pk]
+  order_id                text [note: 'Degenerate Dimension']
+  order_item_id           integer
+  customer_sk             text
+  product_sk              text
+  seller_sk               text
+  price                   numeric
+  freight_value           numeric
+  order_date_sk           integer
+  shipping_limit_date_sk  integer
+}
+
+Table dwh.fact_payments {
+  payment_sk            text [pk]
+  order_id              text [note: 'Degenerate Dimension']
+  payment_type          text
+  payment_installments  integer
+  payment_value         numeric
+  payment_sequential    integer
+}
+
+Table dwh.fact_reviews {
+  review_sk                text [pk]
+  review_id                text
+  order_id                 text [note: 'Degenerate Dimension']
+  review_score             integer
+  review_comment_title     text
+  review_comment_message   text
+  review_creation_date_sk  integer
+}
+
+// DWH Relationships
+Ref: dwh.fact_order_items.customer_sk            > dwh.dim_customers.customer_sk
+Ref: dwh.fact_order_items.product_sk             > dwh.dim_products.product_sk
+Ref: dwh.fact_order_items.seller_sk              > dwh.dim_sellers.seller_sk
+Ref: dwh.fact_order_items.order_date_sk          > dwh.dim_date.date_sk
+Ref: dwh.fact_order_items.shipping_limit_date_sk > dwh.dim_date.date_sk
+Ref: dwh.fact_order_items.order_id               < dwh.fact_payments.order_id
+Ref: dwh.fact_order_items.order_id               < dwh.fact_reviews.order_id
+Ref: dwh.fact_reviews.review_creation_date_sk    > dwh.dim_date.date_sk
+
+
+// ============================================================
+// DWH SCHEMA — VIEWS
+// ============================================================
+
+Table dwh.view_kpi {
+  year              integer
+  month             integer
+  total_orders      integer
+  total_items_sold  integer
+  total_revenue     numeric
+  total_freight     numeric
+  total_gmv         numeric
+  avg_order_value   numeric
+  unique_customers  integer
+
+  Note: 'Revenue & Sales metrics per month'
+}
+
+Table dwh.view_clv {
+  customer_unique_id      text
+  customer_city           text
+  customer_state          text
+  total_orders            integer
+  total_spent             numeric
+  avg_order_value         numeric
+  first_order_date        date
+  last_order_date         date
+  customer_lifespan_days  integer
+
+  Note: 'Customer Lifetime Value (CLV)'
+}
+
+Table dwh.view_rfm {
+  customer_unique_id  text
+  last_order_date     date
+  recency_days        integer
+  frequency           integer
+  monetary            numeric
+  r_score             integer
+  f_score             integer
+  m_score             integer
+  rfm_total           integer
+  customer_segment    text
+
+  Note: 'RFM Segmentation'
+}
+
+Table dwh.view_seller_performance {
+  seller_id          text
+  seller_city        text
+  seller_state       text
+  total_orders       integer
+  total_items_sold   integer
+  total_revenue      numeric
+  avg_item_price     numeric
+  avg_review_score   numeric
+  total_reviews      integer
+
+  Note: 'Seller Performance'
+}
+
+Table dwh.view_product_insights {
+  product_id             text
+  product_category_name  text
+  total_sold             integer
+  total_revenue          numeric
+  avg_price              numeric
+  avg_review_score       numeric
+  total_reviews          integer
+
+  Note: 'Product Insights'
+}
+
+Table dwh.view_payment_analysis {
+  payment_type        text
+  total_transactions  integer
+  total_value         numeric
+  avg_value           numeric
+  avg_installments    numeric
+
+  Note: 'Payment Analysis'
+}
+
+Table dwh.view_sales_by_region {
+  customer_state    text
+  total_orders      integer
+  unique_customers  integer
+  total_revenue     numeric
+  avg_order_value   numeric
+
+  Note: 'Sales by Region'
+}
+
+Table dwh.view_review_analysis {
+  review_score    integer
+  total_reviews   integer
+  percentage      numeric
+
+  Note: 'Review Score Distribution'
+}
+
+// View Relationships (source tables)
+Ref: dwh.view_kpi.year         > dwh.dim_date.year
+Ref: dwh.view_clv.customer_state   > dwh.dim_customers.customer_state
+Ref: dwh.view_rfm.customer_unique_id    > dwh.dim_customers.customer_unique_id
+Ref: dwh.view_seller_performance.seller_id  > dwh.dim_sellers.seller_id
+Ref: dwh.view_product_insights.product_id   > dwh.dim_products.product_id
