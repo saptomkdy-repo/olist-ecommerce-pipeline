@@ -212,7 +212,7 @@ services:
       - smh-network
     restart: on-failure
   
-  # Grafana for dashboard visualization
+  # Grafana for real-time monitoring and visualization
   grafana:
     image: grafana/grafana:10.2.0
     container_name: smh-grafana
@@ -235,6 +235,23 @@ services:
       test: ["CMD", "curl", "--fail", "http://localhost:3000/api/health"]
       interval: 30s
       retries: 5
+  
+  # Superset for business intelligence and data exploration
+  superset:
+    image: apache/superset:3.0.0
+    container_name: smh-superset
+    ports:
+      - "8088:8088"
+    environment:
+      SUPERSET_SECRET_KEY: 'superset_secret_key_olist'
+    volumes:
+      - superset_data:/app/superset_home
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - smh-network
+    restart: always
 
 networks:
   smh-network:
@@ -244,3 +261,4 @@ volumes:
   pg_data:
   airflow_pg_data:
   grafana_data:
+  superset_data:
